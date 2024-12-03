@@ -1,5 +1,8 @@
 module OneTwoTree
 
-# Write your package code here.
+#Main Module file
+export lessThan, tree_prediction, Node
 
-end
+include("Tree.jl")
+
+end # end the module
