@@ -21,3 +21,5 @@ end
     include("decision_tree_tests.jl")
 end
 
+include("gini_tests.jl")
+
