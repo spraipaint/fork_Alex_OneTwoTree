@@ -10,7 +10,7 @@ using Test
     @test t1.root === nothing
     @test t1.max_depth === 5
 
-    dataset = [1.0 2.0; 3.0 4.0; 5.0 6.0]  # A 3x2 matrix of Real numbers
+    dataset = [1.0 2.0; 3.0 4.0; 5.0 6.0]
     labels = ["yes", "no", "yes"]
     n2 = Node(dataset, labels, true)
 
@@ -23,63 +23,22 @@ using Test
     @test t3.max_depth === -1
 end
 
-function get_test_Tree_less_0_5() # returns 1.0 if the input in dim 1 is less 0.5 else 0.0
-    # TODO: I changed the Node signature, so this needs to be updated as well
-    # leaf1 = Node(prediction=1.0)
-    # leaf2 = Node(prediction=0.0)
-    # root = Node(decision = x -> lessThan(x, 0.5), true_child = leaf1, false_child = leaf2)
-    return root
+@testset "Print Tree" begin # Test: stringify tree with multiple decision nodes
+    dataset = reshape([
+        1.0;
+        9.0
+    ], 2, 1)
+    labels = ["A", "B"]
+
+    t = DecisionTreeClassifier(max_depth=1)
+    fit!(t, dataset, labels)
+
+    returned_string = OneTwoTree._tree_to_string(t)
+    expected_string = "
+x[1] <= 5.0 ?
+├─ True: A
+└─ False: B
+"
+
+    @test returned_string == expected_string
 end
-
-
-@testset "Tree.jl" begin # Tests the functionality of Node, tree_prediction, less in Tree.jl
-    # @testset "Tree Prediction" begin
-    #     root = get_test_Tree_less_0_5()
-    #     @test tree_prediction(root, [1.0]) == 0.0
-    #     @test tree_prediction(root, [0.0]) == 1.0
-    #     @test tree_prediction(root, [55.0]) == 0.0
-    #     @test tree_prediction(root, [-1.0]) == 1.0
-    # end
-end
-
-# @testset "Print Tree" begin # Test: Tree with multiple decision nodes
-#     leaf1 = Node(prediction=842)
-#     leaf2 = Node(prediction=2493)
-#     leaf3 = Node(prediction=683)
-
-#     decision_node1 = Node(
-#         decision = x -> x < 28,
-#         decision_string = "x < 28",
-#         true_child = leaf3,
-#         false_child = leaf1
-#     )
-
-#     decision_node2 = Node(
-#         decision = x -> x < 161,
-#         decision_string = "x < 161",
-#         true_child = leaf2,
-#         false_child = decision_node1
-#     )
-
-#     tree = DecisionTree(root=decision_node2, max_depth=3)
-
-#     #TODO:  Capture the printed output
-#     #TODO: this does not work
-#     #TODO: also if you use LLMs, you need to copy all your prompts into a txt file
-#     output = capture_stdout() do
-#         print_tree(tree)
-#         @test tree_prediction(root, [-1.0]) == 1.0
-#     end
-
-#     # Expected output string with the exact structure
-#     expected_output = """
-# x < 161 ?
-# ├─ False: x < 28 ?
-# │   ├─ False: 842.0
-# │   └─ True: 683.0
-# └─ True: 2493.0
-# """
-
-#     # Check if the exact expected output matches the printed output
-#     @test output == expected_output
-# end

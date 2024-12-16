@@ -1,33 +1,10 @@
 #This File contains the fundamentals for decision trees in Julia
 
+include("DecisionFunction.jl")
+
 # ----------------------------------------------------------------
 # MARK: Structs & Constructors
 # ----------------------------------------------------------------
-
-struct Decision{S<:Union{Real, String}}
-    fn::Function
-    param::S
-    feature::Int64
-
-    function Decision(fn::Function, feature::Int64, param::S) where S
-        # TODO: feature index can be chosen out of bounds... Idk, just be careful?
-        new{S}(fn, param, feature)
-    end
-end
-
-function call(decision::Decision, datapoint::Vector{S}) where S
-    if length(datapoint) < decision.feature
-        error("call: passed datapoint of insufficient dimensionality!")
-    end
-    return decision.fn(datapoint, decision.param, feature=decision.feature)
-end
-
-function call(decision::Decision, dataset::Matrix{S}) where S
-    if size(dataset, 2) < decision.feature
-        error("call: passed dataset with data of insufficient dimensionality!")
-    end
-    return [decision.fn(datapoint, decision.param, feature=decision.feature) for datapoint in dataset]
-end
 
 """
     Node
@@ -391,61 +368,6 @@ function calc_depth(tree::AbstractDecisionTree)
 end
 
 """
-    lessThanOrEqual
-
-A basic numerical decision function for testing and playing around.
-"""
-function lessThanOrEqual(x, threshold::Float64; feature::Int64 = 1)::Bool
-    return x[feature] <= threshold
-end
-
-"""
-    equal
-
-A basic categorical decision function for testing and playing around.
-"""
-function equal(x, class::String; feature::Int64 = 1)::Bool
-    return x[feature] == class
-end
-
-"""
-    print_tree(tree::AbstractDecisionTree)
-
-Prints a textual visualization of the decision tree.
-For each decision node, it displays the condition, and for each leaf, it displays the prediction.
-
-# Arguments
-
-- `tree::AbstractDecisionTree` The `DecisionTree` instance to print.
-
-# Example output:
-
-x < 28 ?
-├─ False: y < 161 ?
-   ├─ False: 842
-   └─ True: 2493
-└─ True: 683
-
-"""
-function print_tree(tree::AbstractDecisionTree)
-    if tree.root === nothing
-        println("The tree is empty.")
-    else
-        # TODO: You cannot decide whether a node is a leaf or not by whether it has a predictiona associated with it.
-        # If leaf
-        # if tree.root.prediction !== nothing
-        #     println("The tree is only a leaf with prediction = ", tree.root.prediction, ".")
-        # else
-        # TODO: please don't use assumed to be pre-stored decision strings, and calculate them yourself
-        # println(string(tree.root.decision_string), " ?")
-        println("DECISION: $(tree.root.decision)")
-        _print_node(tree.root.true_child, "", true, "")
-        _print_node(tree.root.false_child, "", false, "")
-        # end
-    end
-end
-
-"""
     is_leaf(node)
 
 Do you seriously expect a description for this?
@@ -454,33 +376,97 @@ function is_leaf(node::Node)::Bool
     return node.prediction !== nothing
 end
 
-"""
-    _print_node(node::Node, prefix::String, is_left::Bool, indentation::String)
+#----------------------------------------
+# MARK: Printing
+#----------------------------------------
 
-Recursive helper function to print the decision tree structure.
+"""
+    tree_to_string(tree::AbstractDecisionTree)
+
+Returns a textual visualization of the decision tree.
+
+# Arguments
+
+- `tree::AbstractDecisionTree` The `DecisionTree` instance to print.
+
+# Example output:
+
+x < 28.0 ?
+├─ False: x == 161.0 ?
+│  ├─ False: 842
+│  └─ True: 2493
+└─ True: 683
+"""
+function _tree_to_string(tree::AbstractDecisionTree)
+    if tree.root === nothing
+        return "\n<Empty Tree>\n"
+    end
+
+    if is_leaf(tree.root)
+        return "\nRoot Prediction: $(tree.root.prediction).\n"
+    end
+
+    result = "\n$(tree.root.decision) ?\n"
+    result *= _node_to_string(tree.root.true_child, true, "")
+    result *= _node_to_string(tree.root.false_child, false, "")
+    return result
+end
+
+
+"""
+    _node_to_string(node::Node, prefix::String, is_true_child::Bool, indentation::String)
+
+Recursive helper function to stringify the decision tree structure.
 
 # Arguments
 
 - `node`: The current node to print.
-- `prefix`: A string used for formatting the tree structure.
 - `is_true_child`: Boolean indicating if the node is a true branch child.
 - `indentation`: The current indentation.
 """
-
-function _print_node(node::Node, prefix::String, is_true_child::Bool, indentation::String)
+function _node_to_string(node::Node, is_true_child::Bool, indentation::String)
     if is_true_child
         prefix = indentation * "├─ True"
     else
         prefix = indentation * "└─ False"
     end
-    # If leaf
-    # TODO: You cannot decide whether a node is a leaf or not by whether it has a predictiona associated with it.
-    if node.prediction !== nothing
-        println(prefix, ": ", node.prediction)
+
+    if is_leaf(node)
+        return "$(prefix): $(node.prediction)\n"
     else
-        # println(prefix, ": ", string(tree.root.decision_string), " ?")
-        println("DECISION: $(node.decision)")
-        _print_node(node.true_child, prefix, true, indentation * "   ")
-        _print_node(node.false_child, prefix, false, indentation * "   ")
+        result = "$(prefix): $(node.decision) ?\n"
+        if is_true_child
+            indentation = indentation * "   "
+        else
+            indentation = indentation * "│  "
+        end
+        result *= _node_to_string(node.true_child, true, indentation)
+        result *= _node_to_string(node.false_child, false, indentation)
+        return result
     end
+end
+
+function Base.show(io::IO, tree::AbstractDecisionTree)
+    print(io, _tree_to_string(tree))
+end
+
+"""
+    print_tree(tree::AbstractDecisionTree)
+
+Returns a textual visualization of the decision tree.
+
+# Arguments
+
+- `tree::AbstractDecisionTree` The `DecisionTree` instance to print.
+
+# Example output:
+
+x < 28.0 ?
+├─ False: x == 161.0 ?
+│  ├─ False: 842
+│  └─ True: 2493
+└─ True: 683
+"""
+function print_tree(tree::AbstractDecisionTree)
+    print(tree)
 end

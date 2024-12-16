@@ -7,8 +7,12 @@ include("CART.jl")
 include("CARTutils.jl")
 include("Gini.jl")
 
+
+# Public API
 export Node, DecisionTreeClassifier, DecisionTreeRegressor, AbstractDecisionTree
-export predict, fit!, build_tree, print_tree
+export fit!, predict, print_tree
+
+#TODO: add build_tree guards to fit since we only export fit
 
 # Private Utilities
 export lessThanOrEqual, equal
