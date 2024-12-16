@@ -19,7 +19,7 @@ function split_indices(dataset::Matrix{S}, node_data::Vector{Int64}, decision_fn
     true_child_data::Vector{Int64} = []
     false_child_data::Vector{Int64} = []
     for datapoint_idx in node_data
-        if decision_fn(dataset[datapoint_idx, :], decision_param, decision_feature)
+        if decision_fn(dataset[datapoint_idx, :], decision_param, feature=decision_feature)
             push!(true_child_data, datapoint_idx)
         else
             push!(false_child_data, datapoint_idx)
@@ -59,11 +59,11 @@ Determine the most frequent class among a subset of class labels.
 
 # Arguments
 
-- `labels::Vector{String}`: class labels
+- `labels::Vector{Union{Int, String}}`: class labels
 - `indices::Vector{Int64}`: the indices of the class labels, to be considered/counted
 """
-function most_frequent_class(labels::Vector{String}, indices::Vector{Int64})
-    class_frequencies = Dict{String, Int64}()
+function most_frequent_class(labels::Vector{T}, indices::Vector{Int64}) where T <: Union{Int, String}
+    class_frequencies = Dict{T, Int64}()
     most_frequent = nothing
 
     for index in indices
@@ -75,7 +75,7 @@ function most_frequent_class(labels::Vector{String}, indices::Vector{Int64})
             end
         else
             class_frequencies[class] = 1
-            if most_frequent == nothing
+            if most_frequent === nothing
                 most_frequent = labels[index]
             end
         end

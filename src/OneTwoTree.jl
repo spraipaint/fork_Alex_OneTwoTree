@@ -1,17 +1,22 @@
 module OneTwoTree
 
-
 #Main Module file
-export tree_prediction, Node, DecisionTree, build_tree, fit!, print_tree
-export lessThanOrEqual, equal
-export gini_impurity
-
 include("Tree.jl")
+include("utils/load_data.jl")
 include("CARTutils.jl")
 include("Gini.jl")
 
+export Node, DecisionTreeClassifier, DecisionTreeRegressor, AbstractDecisionTree
+export predict, fit!, build_tree, print_tree
+
+# Private Utilities
+export lessThanOrEqual, equal
+export load_data
+export gini_impurity
+
+# Testing
+export label_mean, class_frequencies, collect_classes
+export calc_depth, calc_accuracy, is_leaf
 
 end # end the module
 
-
-#Test
