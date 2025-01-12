@@ -7,11 +7,13 @@ include("Tree.jl")
 include("CART.jl")
 include("CARTutils.jl")
 include("Gini.jl")
+include("Forest.jl")
 
 
 # Public API
 export Node, DecisionTreeClassifier, DecisionTreeRegressor, AbstractDecisionTree
-export fit!, predict, print_tree
+export fit!, predict, print_tree, get_random_features
+export ForestClassifier, fit2!, predict2
 
 #TODO: add build_tree guards to fit since we only export fit
 
