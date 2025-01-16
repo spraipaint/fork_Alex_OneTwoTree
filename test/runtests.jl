@@ -11,4 +11,5 @@ include("gini_tests.jl")
 include("cart_tests.jl")
 include("regression_tests.jl")
 include("cart_utils_tests.jl")
+include("infoGain_tests.jl")
 
