@@ -1,3 +1,7 @@
+### Tests for the CART algorithm.
+### The CART algorithm constructs a DecisionTree from given data.
+### Test use cases and different data types.
+
 using Test
 using OneTwoTree
 using Suppressor # suppress prints in tests
@@ -64,6 +68,14 @@ function test_tree_consistency(; tree::OneTwoTree.AbstractDecisionTree, run_test
         @test OneTwoTree.calc_depth(tree) <= tree.max_depth
     end
 end
+
+"""
+Calls CART on simple manually crafted datasets for classification trees.
+Tests consistency of all data fields in constructed trees.
+Tests different and also mixed data types.
+Tests whether constructed trees predict expected values and conform to given constraints
+(e.g. max_depth).
+"""
 
 @testset "Basic Classification" begin
     # some datasets
@@ -252,6 +264,10 @@ end
     end
 end
 
+"""
+Loads large FashionMNIST dataset from MLDatasets and tests tree construction and prediction
+as well as consistency in the tree.
+"""
 
 @testset "FashionMNIST-1000" begin
     if !RUN_MNIST
@@ -282,6 +298,11 @@ end
         @test calc_accuracy(labels, pred) > 0.2
     end
 end
+
+
+"""
+Runs the examples from the ReadMe to make sure that they work.
+"""
 
 @testset "ReadMe Examples" begin
     @testset "Classification" begin
