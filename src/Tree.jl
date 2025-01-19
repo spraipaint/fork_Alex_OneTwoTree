@@ -133,11 +133,11 @@ Train a decision tree on the given data using some algorithm (e.g. CART).
 # Arguments
 
 - `tree::AbstractDecisionTree`: the tree to be trained
-- `dataset::Matrix{Union{Real, String}}`: the training data
+- `dataset::AbstractMatrix`: the training data
 - `labels::Vector{Union{Real, String}}`: the target labels
 - `column_data::Bool`: whether the datapoints are contained in dataset columnwise
 """
-function fit!(tree::AbstractDecisionTree, features::Matrix{S}, labels::Vector{T}, column_data=false) where {S<:Union{Real, String}, T<:Union{Number, String}}
+function fit!(tree::AbstractDecisionTree, features::AbstractMatrix, labels::Vector{T}, column_data=false) where {T<:Union{Number, String}}
     _verify_fit!_args(tree, features, labels, column_data)
 
     classify = (tree isa DecisionTreeClassifier)
@@ -152,9 +152,9 @@ Traverses the tree for a given datapoint x and returns that trees prediction.
 # Arguments
 
 - `tree::AbstractDecisionTree`: the tree to predict with
-- `X::Union{Matrix{S}, Vector{S}`: the data to predict on
+- `X::Union{AbstractMatrix, AbstractVector`: the data to predict on
 """
-function predict(tree::AbstractDecisionTree, X::Union{Matrix{S}, Vector{S}}) where S<:Union{Real, String}
+function predict(tree::AbstractDecisionTree, X::Union{AbstractMatrix, AbstractVector})
     if tree.root === nothing
         error("Cannot predict from an empty tree.")
     end
@@ -162,7 +162,7 @@ function predict(tree::AbstractDecisionTree, X::Union{Matrix{S}, Vector{S}}) whe
     return predict(tree.root, X)
 end
 
-function predict(node::Node, datapoint::Vector{S}) where S<:Union{Real, String}
+function predict(node::Node, datapoint::AbstractVector)
     if is_leaf(node)
         return node.prediction
     end
@@ -174,7 +174,7 @@ function predict(node::Node, datapoint::Vector{S}) where S<:Union{Real, String}
     end
 end
 
-function predict(node::Node, dataset::Matrix{S}) where S<:Union{Real, String}
+function predict(node::Node, dataset::AbstractMatrix)
     if is_leaf(node)
         return node.prediction * ones(size(dataset, 1))
     end
@@ -268,18 +268,16 @@ x < 28.0 ?
 │  └─ True: 2493
 └─ True: 683
 """
-function _tree_to_string(tree::AbstractDecisionTree)
+function _tree_to_string(tree::AbstractDecisionTree, print_parameters=true)
     if tree.root === nothing
-        return "\n<Empty Tree>\n"
+        return "\nTree(max_depth=$(tree.max_depth), root=nothing)\n"
     end
 
-    if is_leaf(tree.root)
-        return "\nRoot Prediction: $(tree.root.prediction).\n"
+    result = ""
+    if print_parameters
+        result *= "Tree(max_depth=$(tree.max_depth))"
     end
-
-    result = "\n$(tree.root.decision) ?\n"
-    result *= _node_to_string(tree.root.true_child, true, "")
-    result *= _node_to_string(tree.root.false_child, false, "")
+    result *= _node_to_string_as_root(tree.root)
     return result
 end
 
@@ -305,5 +303,5 @@ x < 28.0 ?
 └─ True: 683
 """
 function print_tree(tree::AbstractDecisionTree)
-    print(tree)
+    print(_tree_to_string(tree, false))
 end

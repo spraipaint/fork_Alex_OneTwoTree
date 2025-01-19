@@ -1,3 +1,5 @@
+### Test DecisionTree constructors and print function
+
 using OneTwoTree
 using Test
 
@@ -12,7 +14,7 @@ using Test
 
     dataset = [1.0 2.0; 3.0 4.0; 5.0 6.0]
     labels = ["yes", "no", "yes"]
-    n2 = Node(dataset, labels, true)
+    n2 = OneTwoTree.Node(dataset, labels, true)
 
     t2 = DecisionTreeClassifier(root=n2, max_depth=5)
     @test t2.root === n2
@@ -33,7 +35,7 @@ end
     t = DecisionTreeClassifier(max_depth=1)
     fit!(t, dataset, labels)
 
-    returned_string = OneTwoTree._tree_to_string(t)
+    returned_string = OneTwoTree._tree_to_string(t, false)
     expected_string = "
 x[1] <= 5.0 ?
 ├─ True: A
@@ -52,7 +54,7 @@ x[1] <= 5.0 ?
     t = DecisionTreeClassifier(max_depth=2)
     fit!(t, dataset1, labels1)
 
-    returned_string = OneTwoTree._tree_to_string(t)
+    returned_string = OneTwoTree._tree_to_string(t, false)
     expected_string = "
 x[1] <= 2.0 ?
 ├─ True: A

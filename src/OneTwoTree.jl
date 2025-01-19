@@ -8,21 +8,16 @@ include("CART.jl")
 include("CARTutils.jl")
 include("Gini.jl")
 include("Forest.jl")
+include("InfoGain.jl")
+include("VarGain.jl")
 
-
-# Public API
-export Node, DecisionTreeClassifier, DecisionTreeRegressor, AbstractDecisionTree
+export DecisionTreeClassifier, DecisionTreeRegressor, AbstractDecisionTree
 export fit!, predict, print_tree, get_random_features
+export calc_accuracy, print_tree
 export ForestClassifier, fit2!, predict2
-
-#TODO: add build_tree guards to fit since we only export fit
-
-# Private Utilities
-export lessThanOrEqual, equal
-export load_data
 export gini_impurity
-
-# Testing
-export calc_depth, calc_accuracy, is_leaf
+export information_gain
+export less_than_or_equal, equal
+export var_gain
 
 end # end the module
