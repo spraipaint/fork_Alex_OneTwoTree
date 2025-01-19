@@ -18,8 +18,8 @@ This function calculates the entropy of set of lables
 
 function entropy(labels)
     num_occurences = countmap(labels)
-    wkeiten = [occurence / length(labels) for occurence in values(num_occurences)]
-    return -sum(p * log2(p) for p in wkeiten if p > 0)
+    probabilities = [occurence / length(labels) for occurence in values(num_occurences)]
+    return -sum(p * log2(p) for p in probabilities if p > 0)
 end
 
 
