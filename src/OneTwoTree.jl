@@ -8,6 +8,7 @@ include("CART.jl")
 include("CARTutils.jl")
 include("Gini.jl")
 include("infoGain.jl")
+include("VarGain")
 
 
 # Public API
@@ -19,5 +20,6 @@ export gini_impurity
 
 export information_gain
 export less_than_or_equal, equal
+export var_gain
 
 end # end the module
