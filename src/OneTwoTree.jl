@@ -7,8 +7,8 @@ include("Tree.jl")
 include("CART.jl")
 include("CARTutils.jl")
 include("Gini.jl")
-include("infoGain.jl")
-include("VarGain")
+include("InfoGain.jl")
+include("VarGain.jl")
 
 
 # Public API
