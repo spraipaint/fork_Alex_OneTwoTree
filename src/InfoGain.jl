@@ -1,5 +1,6 @@
 # Spliting criterion Information Gain using entropy
-using StatsBase
+#using StatsBase
+include("vectorutils.jl")
 """
     entropy(features::AbstractVector) -> Float64
 
@@ -14,6 +15,7 @@ This function calculates the entropy of set of lables
     and n the number of elements in X
     and P() beeing the Probability 
 """
+
 function entropy(labels)
     num_occurences = countmap(labels)
     wkeiten = [occurence / length(labels) for occurence in values(num_occurences)]

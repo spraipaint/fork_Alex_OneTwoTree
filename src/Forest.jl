@@ -1,7 +1,8 @@
 # A forest is a collection of trees wich aggregate their decisions
 #first i cover Forests for Classification and after that Forests for regression
 
-using StatsBase: mode #TODO richtig einbinden oder selbst schreiben
+#using StatsBase: mode #TODO richtig einbinden oder selbst schreiben
+include("vectorutils.jl")
 
 mutable struct ForestClassifier <: AbstractDecisionTree
     trees::Vector{AbstractDecisionTree} #TODO better DecisionTreeClassifier?
