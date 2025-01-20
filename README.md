@@ -27,21 +27,21 @@
 - Via `Pkg>` mode (press `]` in Julia REPL):
 
 ```bash
-add https://github.com/nichtJakob/OneTwoTree.jl
+activate --temp
+add https://github.com/nichtJakob/OneTwoTree.jl.git
 ```
 
 - For Pluto notebooks: We can't use Pluto's environments but have to create our own:
 ```julia
 using Pkg
 Pkg.activate("MyEnvironment")
-Pkg.add(url="https://github.com/nichtJakob/OneTwoTree.jl")
+Pkg.add(url="https://github.com/nichtJakob/OneTwoTree.jl.git")
 using OneTwoTree
 ```
 
 
 ## ▶️ **Example: Running a Simple Example**
 
-- Note that the classifier currently only supports training datasets of type `Real` and labels of type `String`
 - Note that that the Tree Construction in its current state can be very slow. Therefore, it may be advised to use small training datasets for the moment.
 
 ### Classification
