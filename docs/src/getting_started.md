@@ -42,25 +42,25 @@ print("The tree predicted class \$(prediction[1]).")
 ```
 
 ### Regression
-  ```julia
-  using OneTwoTree
-  dataset = [
-    1.0 2.0
-    2.0 3.0
-    3.0 4.0
-    4.0 5.0
-  ]
-  labels = [1.5, 2.5, 3.5, 4.5]
+```julia
+using OneTwoTree
+dataset = [
+  1.0 2.0
+  2.0 3.0
+  3.0 4.0
+  4.0 5.0
+]
+labels = [1.5, 2.5, 3.5, 4.5]
 
-  tree = DecisionTreeRegressor(max_depth=3)
-  fit!(tree, dataset, labels)
-  print(tree)
+tree = DecisionTreeRegressor(max_depth=3)
+fit!(tree, dataset, labels)
+print(tree)
 
-  prediction = predict(tree, [
-    1.0 4.0
-  ])
-  print("The tree predicted \$(prediction[1]).")
-  ```
+prediction = predict(tree, [
+  1.0 4.0
+])
+print("The tree predicted \$(prediction[1]).")
+```
 
 ### Forests and Loading Other Datasets
 
