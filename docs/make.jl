@@ -16,6 +16,8 @@ makedocs(;
         "Home" => "index.md",
         "Getting Started" => "getting_started.md",
         "Functions" => "functions.md",
+        "Demo classifications" => "demo_classification.md",
+        "Demo regression" => "demo_regression.md",
     ],
 )
 
